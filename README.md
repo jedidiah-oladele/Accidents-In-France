@@ -1,3 +1,3 @@
 # Accidents-In-France
-This is a repository to host all the capstone project codefiles.
+This is a repository to host all codefiles for the capstone project.
 By team XGBoost
