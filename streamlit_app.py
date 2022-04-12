@@ -6,11 +6,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pickle
 
-import zipfile
-with zipfile.ZipFile("./streamlit files/streamlit_dataset.zip", 'r') as zip_ref:
-    zip_ref.extractall("./streamlit files/")
     
-df = pd.read_csv("./streamlit files/model_dataset.csv")
+df = pd.read_csv("streamlit files/model_dataset.csv")
 
 st.title("Accidents In France")
 
@@ -22,7 +19,7 @@ page = st.sidebar.selectbox("", ["The Project", "Visualize", "Predictions", "Abo
 
 def display_dataframe():
     """Display dataframe"""
-    st.image("./streamlit files/accident.jpg", width = 700)
+    st.image("streamlit files/accident.jpg", width = 700)
     st.write("## The dataset 📰")
     col_names = df.columns.tolist()
     st.dataframe(df[st.multiselect("Columns:", col_names,
@@ -54,9 +51,8 @@ def visualize_data():
 
 
 def visualize_map():
-    # Map visuals
-    # df_map = pd.read_csv("./streamlit files/streamlit_map_data.csv")
-    df_map = pd.read_csv("./streamlit files/streamlit_map_data.csv")
+    # Map visualsv")
+    df_map = pd.read_csv("streamlit files/streamlit_map_data.csv")
     st.write("### Geographical visuals")
     st.map(df_map)
     
@@ -96,7 +92,7 @@ def use_model():
     # Make predicitions
     predict = st.button("Predict 📈")
     if predict:
-        #model = pickle.load(open("./streamlit files/dtc_model.pkl", "rb"))
+        #model = pickle.load(open("streamlit files/dtc_model.pkl", "rb"))
         prediction = 'Not Fatal' #model.predict(input_df)
 
         st.write(f"##### The maximum accident severity that can occur from the given conditions is {prediction}")
@@ -106,10 +102,11 @@ def use_model():
 # Website flow logic    
 if page == "The Project":
     display_dataframe()
-elif page == "Visualize The Data":
+elif page == "Visualize":
     visualize_data()
     #visualize_map()
-elif page == "Make Prediction":
+elif page == "Predictions":
     use_model()
 elif page == "About":
+    st.write("About page")
     pass
