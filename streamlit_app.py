@@ -6,6 +6,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pickle
 
+import zipfile
+with zipfile.ZipFile("./streamlit files/streamlit_dataset.zip", 'r') as zip_ref:
+    zip_ref.extractall("./streamlit files/")
+    
 df = pd.read_csv("./streamlit files/model_dataset.csv")
 
 st.title("Accidents In France")
