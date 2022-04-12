@@ -71,6 +71,7 @@ def use_model():
 
         add_selectbox('hour', "Hour of the day")
         add_selectbox('lighting', "Lighting condition")
+        add_selectbox('intersection', "Point of intersection")
         add_selectbox('atmosphere', "Atmospheric condition")
         add_selectbox('collision', "Type of collision")
         add_selectbox('localisation', "Localisation")
@@ -88,14 +89,21 @@ def use_model():
 
 
     input_df = get_user_input()
-     
-    # Make predicitions
+    
     predict = st.button("Predict 📈")
+    # Make predicitions
     if predict:
-        #model = pickle.load(open("streamlit files/dtc_model.pkl", "rb"))
-        prediction = 'Not Fatal' #model.predict(input_df)
-
-        st.write(f"##### The maximum accident severity that can occur from the given conditions is {prediction}")
+        model = pickle.load(open("streamlit files/dtc_model.pkl", "rb"))
+        encoders = pickle.load(open("streamlit files/encoders.pkl", "rb"))
+        
+        # Encode the features using the same encoder that was used in modelling
+        for column in input_df.columns:
+            input_df[column] = encoders[column].transform(input_df[column])
+        
+        # Make predictions
+        prediction = model.predict(input_df)
+        result = encoders["accident_severity"].inverse_transform(prediction)
+        st.write(f"##### The maximum accident severity that can occur from the given conditions is {result[0]}")
     
 
     
