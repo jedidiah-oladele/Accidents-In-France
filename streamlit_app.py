@@ -10,17 +10,24 @@ import pickle
 df = pd.read_csv("streamlit files/model_dataset.csv")
 
 st.set_page_config(layout="wide")
-st.title("Accidents In France")
+
+# To center radio buttons
+st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;}</style>',
+         unsafe_allow_html=True)
 
 
-st.sidebar.header("Pages")
-page = st.sidebar.selectbox("", ["Home", "Visualize", "Predict", "About"])
+# Title
+st.markdown("<h1 style='text-align: center;'>Accidents In France</h1>", unsafe_allow_html=True)
+# Pages
+page = st.radio("", ["Home", "Visualize", "Predict", "About"])
+st.write("")
 
 
 
 def data_page():
     """Display dataframe"""
-    st.image("streamlit files/accident.jpg", width = 700)
+    center = st.columns((1,6,1))[1]
+    center.image("streamlit files/accident.jpg")
     st.write("""
     - Get an overview of accident occurances in France
     
@@ -37,6 +44,8 @@ def data_page():
     col_names = df.columns.tolist()
     st.dataframe(df[st.multiselect("Columns:", col_names,
                                    default=["accident_severity", "lighting", "intersection", "atmosphere"])])
+    
+    
     
     
 def visualize_page():
@@ -61,13 +70,17 @@ def visualize_page():
     plt.xlabel('')
     plt.ylabel('')
     st.pyplot(fig)
-
-
+    
+    
+    
+    
 def visualize_map():
     # Map visualsv")
     df_map = pd.read_csv("streamlit files/streamlit_map_data.csv")
     st.write("### Geographical visuals")
     st.map(df_map)
+    
+    
     
     
 def modelling_page():
@@ -122,17 +135,15 @@ def modelling_page():
         prediction = model.predict(input_df)
         result = encoders["accident_severity"].inverse_transform(prediction)
         result_col.write(f"##### The maximum accident severity that can occur from the given conditions is {result[0]}")
-    
-
-    
+        
+        
+        
+        
 def about_page():
-    st.write("""
-    This was done as the captone project for the HDSC winter '22 Internship
+    st.write("#### This was done as the captone project for the HDSC winter '22 Internship")
+    st.write("#### By team XGBoost 🚀")
+    st.write("#### All files used for the project can be found [here](https://github.com/jehddie/Accidents-In-France)")
     
-    By team XGBoost 🚀
-    
-    All files used for the project can be found [here](https://github.com/jehddie/Accidents-In-France)
-    """)
     
     
     
