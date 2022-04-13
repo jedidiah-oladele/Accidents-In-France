@@ -9,24 +9,37 @@ import pickle
     
 df = pd.read_csv("streamlit files/model_dataset.csv")
 
+st.set_page_config(layout="wide")
 st.title("Accidents In France")
 
 
-st.sidebar.header("Pages to view")
-page = st.sidebar.selectbox("", ["The Project", "Visualize", "Predictions", "About"])
+st.sidebar.header("Pages")
+page = st.sidebar.selectbox("", ["Home", "Visualize", "Predict", "About"])
 
 
 
-def display_dataframe():
+def data_page():
     """Display dataframe"""
     st.image("streamlit files/accident.jpg", width = 700)
+    st.write("""
+    - Get an overview of accident occurances in France
+    
+    - Gain insights on how several external conditions affects the severity of an accident
+    
+    - Use a pretrain model to predict accident severity""")
+    
     st.write("## The dataset 📰")
+    st.write("""
+    The dataset used for the project was gotten from [Kaggle](https://www.kaggle.com/datasets/ahmedlahlou/accidents-in-france-from-2005-to-2016)
+    
+    It consisted of several CSV files which were merged and preprocessed to the final format shown below""")
+    
     col_names = df.columns.tolist()
     st.dataframe(df[st.multiselect("Columns:", col_names,
                                    default=["accident_severity", "lighting", "intersection", "atmosphere"])])
     
     
-def visualize_data():
+def visualize_page():
     """Visualize the dataset by count"""
     st.write("## Visualize the data 📊")
     
@@ -34,7 +47,7 @@ def visualize_data():
     
     visualize_by = st.selectbox("Visualize by:", col_names)
 
-    fig = plt.figure(figsize=(10, 6))
+    fig = plt.figure(figsize=(10, 4))
     plt.style.use("dark_background")
     
     # Visualize with respect to accident severity
@@ -57,40 +70,45 @@ def visualize_map():
     st.map(df_map)
     
     
-def use_model():
+def modelling_page():
     """Making predictions"""
-    st.write("## Predict accident severity 📈")
-    st.subheader("Input Parameters")
-
+    
+    st.write("## Make predictions 📈")
+    
     def get_user_input():
         """Get user input"""
         features = {}
 
-        def add_selectbox(column, title):
-            features[column] = st.selectbox(title, df[column].unique())
-
-        add_selectbox('hour', "Hour of the day")
-        add_selectbox('lighting', "Lighting condition")
-        add_selectbox('intersection', "Point of intersection")
-        add_selectbox('atmosphere', "Atmospheric condition")
-        add_selectbox('collision', "Type of collision")
-        add_selectbox('localisation', "Localisation")
-        add_selectbox('user_category', "User category")
-        add_selectbox('user_sex', "User sex")
-        add_selectbox('pedestrian_action', "Pedestrian action")
-        add_selectbox('road_category', "Road category")
-        add_selectbox('traff_regime', "Traffic regime")
-        add_selectbox('longitud_profile', "Longitudinal profile")
-        add_selectbox('drawing_plan', "Drawing plan")
-        add_selectbox('surface_cond', "Surface condition")
-        add_selectbox('acc_situation', "Accident occurance")
+        def add_selectbox(position, column, title):
+            features[column] = position.selectbox(title, df[column].unique())
+        
+        expander = st.expander("Input Parameters ", expanded=True)
+        col1, col2, col3 = expander.columns(3)
+        
+        add_selectbox(col1, 'hour', "Hour of the day")
+        add_selectbox(col1, 'lighting', "Lighting condition")
+        add_selectbox(col1, 'intersection', "Point of intersection")
+        add_selectbox(col1, 'atmosphere', "Atmospheric condition")
+        add_selectbox(col1, 'collision', "Type of collision")
+        add_selectbox(col2, 'localisation', "Localisation")
+        add_selectbox(col2, 'user_category', "User category")
+        add_selectbox(col2, 'user_sex', "User sex")
+        add_selectbox(col2, 'pedestrian_action', "Pedestrian action")
+        add_selectbox(col2, 'road_category', "Road category")
+        add_selectbox(col3, 'traff_regime', "Traffic regime")
+        add_selectbox(col3, 'longitud_profile', "Longitudinal profile")
+        add_selectbox(col3, 'drawing_plan', "Drawing plan")
+        add_selectbox(col3, 'surface_cond', "Surface condition")
+        add_selectbox(col3, 'acc_situation', "Accident occurance")
 
         return pd.DataFrame(features, index=[0])
 
 
     input_df = get_user_input()
     
-    predict = st.button("Predict 📈")
+    pred_col, result_col = st.columns((1,4))
+    predict = pred_col.button("Predict 📈")
+    
     # Make predicitions
     if predict:
         model = pickle.load(open("streamlit files/dtc_model.pkl", "rb"))
@@ -103,18 +121,28 @@ def use_model():
         # Make predictions
         prediction = model.predict(input_df)
         result = encoders["accident_severity"].inverse_transform(prediction)
-        st.write(f"##### The maximum accident severity that can occur from the given conditions is {result[0]}")
+        result_col.write(f"##### The maximum accident severity that can occur from the given conditions is {result[0]}")
     
 
     
+def about_page():
+    st.write("""
+    This was done as the captone project for the HDSC winter '22 Internship
+    
+    By team XGBoost 🚀
+    
+    All files used for the project can be found [here](https://github.com/jehddie/Accidents-In-France)
+    """)
+    
+    
+    
 # Website flow logic    
-if page == "The Project":
-    display_dataframe()
+if page == "Home":
+    data_page()
 elif page == "Visualize":
-    visualize_data()
+    visualize_page()
     #visualize_map()
-elif page == "Predictions":
-    use_model()
+elif page == "Predict":
+    modelling_page()
 elif page == "About":
-    st.write("About page")
-    pass
+    about_page()
