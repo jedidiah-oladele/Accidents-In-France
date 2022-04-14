@@ -27,7 +27,7 @@ st.write("")
 def data_page():
     """Display dataframe"""
     center = st.columns((1,6,1))[1]
-    center.image("streamlit files/accident.jpg")
+    center.image("streamlit files/images.jpeg", width=800)
     st.write("""
     - Get an overview of accident occurances in France
     
@@ -143,6 +143,9 @@ def about_page():
     st.write("#### This was done as the captone project for the HDSC winter '22 Internship")
     st.write("#### By team XGBoost 🚀")
     st.write("#### All files used for the project can be found [here](https://github.com/jehddie/Accidents-In-France)")
+    center = st.columns((1,1,1))[1]
+    center.image("streamlit files/hamoye_logo.jpeg", width=400)
+    
     
     
     
