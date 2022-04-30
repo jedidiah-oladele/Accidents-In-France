@@ -7,10 +7,7 @@ import matplotlib.pyplot as plt
 import pickle
 from zipfile import ZipFile
 
-zip = ZipFile("streamlit files/model_dataset.zip")
-zip.extractall()
-    
-df = pd.read_csv("streamlit files/model_dataset.csv")
+
 
 st.set_page_config(layout="wide")
 
@@ -25,6 +22,14 @@ st.markdown("<h1 style='text-align: center;'>Accidents In France</h1>", unsafe_a
 page = st.radio("", ["Home", "Visualize", "Predict", "About"])
 st.write("")
 
+
+ZipFile("streamlit files/model_dataset.zip").extractall()
+
+@st.cache(allow_output_mutation=True)
+def load_data():
+    df = pd.read_csv("streamlit files/model_dataset.csv")
+    return df
+df = load_data()
 
 
 def data_page():
