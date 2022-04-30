@@ -5,7 +5,10 @@ import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
 import pickle
+import ZipFile
 
+zip = ZipFile("streamlit files/model_dataset.zip")
+zip.extractall()
     
 df = pd.read_csv("streamlit files/model_dataset.csv")
 
