@@ -23,7 +23,7 @@ page = st.radio("", ["Home", "Visualize", "Predict", "About"])
 st.write("")
 
 
-ZipFile("streamlit files/model_dataset.zip").extractall()
+ZipFile("streamlit files/model_dataset.zip").extractall("streamlit files")
 
 @st.cache(allow_output_mutation=True)
 def load_data():
