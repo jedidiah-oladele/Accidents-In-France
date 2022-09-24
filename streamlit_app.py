@@ -35,7 +35,7 @@ df = load_data()
 def data_page():
     """Display dataframe"""
     center = st.columns((1,6,1))[1]
-    center.image("streamlit files/images.jpeg", width=800, use_column_width='auto')
+    center.image("streamlit files/images.jpeg", width=1600, use_column_width='auto')
     st.write("""
     - Get an overview of accident occurances in France
     
